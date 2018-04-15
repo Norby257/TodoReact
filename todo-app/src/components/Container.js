@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Axios from 'axios';
 //  need to also import the other dependencies I defined - oops 
 import Title from './Title';
 import TodoForm from './TodoForm';
@@ -14,14 +15,29 @@ class TodoApp extends React.Component{
         this.state = {
             data: []
         }
+        // api 
+        this.apiUrl = 'https://57b1924b46b57d1100a3c3f8.mockapi.io/api/todos'
+        
     }
+    //  lifecycle methods 
+    //  make HTTP req with Axios once component mounts
+    componentDidMount() {
+        Axios.get(this.apiUrl)
+        .then((res) => {
+            //  set state with result 
+            this.setState({data:res.data});
+        });
+    
+}
     //  add todo handler  - this relates to the todo list js form
     addTodo(val) {
-        const todo = {text: val, id: window.id++}
-        //  updating by using array method - push
-        this.state.data.push(todo);
-        //  update the state 
-        this.setState({data: this.state.data});
+        const todo = {text: val}
+       //   update data with result of API call
+       Axios.post(this.apiUrl, todo)
+       .then((res) => {
+           this.state.data.push(res.data);
+           this.setState({data: this.state.data})
+       })
     }
     //  handle removing todo items  - using array filter methods 
     handleRemove(id) {
@@ -29,7 +45,10 @@ class TodoApp extends React.Component{
             if(todo.id !== id) return todo;
                 });
         //  use result to update the sate 
-        this.setState({data: remainder});
+        Axios.delete(this.apiUrl+ '/'+id)
+        .then((res) => {
+            this.setState({data: remainder});
+        })
     }
 
     render() {
@@ -45,3 +64,5 @@ class TodoApp extends React.Component{
         )
     }
 }
+
+export default Container;
