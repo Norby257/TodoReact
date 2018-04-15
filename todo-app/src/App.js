@@ -3,7 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import TodoForm from './components/TodoForm';
 import todoList from './components/TodoList';
-
+import Title from './components/Title';
+import Container from './components/Container';
 class App extends Component {
   render() {
     return (
